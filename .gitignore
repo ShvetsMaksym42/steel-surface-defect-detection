@@ -1,0 +1,9 @@
+processed_data/
+raw_data/
+runs/
+*.cache
+__pycache__/
+.vscode/
+.ipynb_checkpoints/
+.DS_Store
+weights/

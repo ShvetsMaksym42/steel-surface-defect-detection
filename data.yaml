@@ -1,0 +1,10 @@
+path: .\processed_data
+train: images/train
+val: images/val
+test: images/test
+nc: 4
+names:
+- class1
+- class2
+- class3
+- class4
