@@ -1,0 +1,92 @@
+# Severstal Steel Defect Detection
+
+Object detection pipeline for industrial steel surface defects using YOLOv8m, trained on the [Severstal Steel Defect Detection](https://www.kaggle.com/competitions/severstal-steel-defect-detection) dataset.
+
+---
+
+## Overview
+
+The dataset provides 12,568 grayscale images (256×1600) with RLE segmentation masks across 4 defect classes. Since the task is object detection, the pipeline converts RLE masks to bounding boxes, slices images into overlapping tiles, and trains YOLOv8m on the resulting dataset.
+
+**Key challenges:**
+- RLE masks use 1-indexed, column-major order encoding
+- Unusual image dimensions (256×1600) require tiling
+- Severe class imbalance: Class 2 has only 247 samples vs 5,150 for Class 3
+- 47% of images are defect-free
+- Coarse annotations — masks were drawn roughly, reducing bbox precision
+
+---
+
+## Pipeline
+
+1. Decode RLE masks → binary masks per class
+2. Slice images into overlapping tiles (256×608, 3 per image)
+3. Extract bboxes via connected components analysis
+4. Stratified train/val/test split (75/15/10)
+5. YOLOv8m training
+
+**Tiling:** Each image is split into 3 overlapping tiles at positions [0, 495, 991] with width 608px (~113px overlap). Overlap ensures defects near tile boundaries appear fully on at least one tile.
+
+**Stratified split:** Images are split by original filename (not tile), using class priority order (rarest class first) to ensure rare classes are proportionally distributed across splits.
+
+**Adaptive thresholds:** Minimum blob area per class was derived from median blob area analysis (`eda/analyze_blobs.py`), using lower thresholds for rare classes to avoid discarding valid annotations.
+
+---
+
+## Experiments
+
+Two training runs were conducted to investigate the effect of class imbalance on model performance.
+
+### Baseline
+Standard training on the full dataset with default sampling.
+
+- 85 epochs, batch=32, YOLOv8m pretrained on COCO
+- 28,278 tiles (31% defect, 69% defect-free)
+
+### Balanced
+An attempt to reduce the impact of class imbalance:
+- **Negative undersampling:** A custom `BalancedDetectionTrainer` samples a random subset of negative tiles each epoch (30% of total), without discarding any data — all negatives remain available across epochs.
+- **Synthetic inclusion tiles:** 50 augmented samples generated from the 185 real inclusion tiles in the train set (flip + HSV jitter + brightness) to partially compensate for Class 2 scarcity.
+- 50 epochs, batch=8, starting from pretrained COCO weights.
+
+---
+
+## Results (Test Set)
+
+| Model    | mAP50 | mAP50-95 | Precision | Recall |
+|----------|-------|----------|-----------|--------|
+| Baseline | 0.647 | 0.385    | 0.612     | 0.625  |
+| Balanced | 0.598 | 0.337    | 0.631     | 0.574  |
+
+**Per-class mAP50 (Baseline):**
+
+| Class         | mAP50 | Recall |
+|---------------|-------|--------|
+| crazing       | 0.556 | 0.579  |
+| inclusion     | 0.552 | 0.532  |
+| patches       | 0.759 | 0.741  |
+| pitted_surface| 0.689 | 0.647  |
+
+The balanced experiment did not improve overall metrics, likely due to fewer training epochs (50 vs 85) and the OOM-forced batch size reduction from 32 to 8, which introduced noisy gradients.
+
+<p align="center">
+  <img src="media/yolo_evaluation/baseline/val_batch0_pred.jpg" width="700"/>
+  <br><em>Baseline predictions on test set</em>
+</p>
+
+<p align="center">
+  <img src="media/yolo_evaluation/baseline/confusion_matrix_normalized.png" width="500"/>
+  <br><em>Normalized confusion matrix — Baseline (test set)</em>
+</p>
+
+---
+
+## Future Work
+
+- **Segmentation model:** U-Net with EfficientNet-B0 backbone can use the original RLE masks directly, avoiding the lossy RLE→bbox conversion. Segmentation is better suited for diffuse defects like crazing.
+- **Cascade architecture:** YOLO detects defect regions, a lightweight classifier refines the class prediction — trading latency for recall.
+- **API & Deployment:** REST API with FastAPI, containerized with Docker.
+---
+
+> Full source code, preprocessing pipeline, and Kaggle training notebooks are in this repository.  
+> Baseline weights (85 epochs): [Kaggle Models](https://www.kaggle.com/models/shvetsmaksym42/yolo-baseline)
