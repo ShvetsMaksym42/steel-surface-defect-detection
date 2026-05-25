@@ -1,3 +1,19 @@
+![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?logo=pytorch&logoColor=white)
+![Computer Vision](https://img.shields.io/badge/Area-Computer%20Vision-success)
+![License](https://img.shields.io/badge/license-MIT-green.svg)
+
+## 🚀 Result at a Glance
+
+| Metric | Performance / Outcome |
+|--------|----------------------|
+| mAP50 (test) | 0.647 — Baseline YOLOv8m |
+| Inference speed | 118ms per image (CPU) |
+| Dataset scale | 12,568 images → 37,704 tiles |
+| Pipeline | RLE masks → YOLO bboxes, end-to-end |
+| Training | 85 epochs on Kaggle T4 GPU |
+
+---
+
 # Severstal Steel Defect Detection
 
 **Object detection** pipeline for industrial steel surface defects using **YOLOv8m**, trained on the [Severstal Steel Defect Detection](https://www.kaggle.com/competitions/severstal-steel-defect-detection) dataset.
