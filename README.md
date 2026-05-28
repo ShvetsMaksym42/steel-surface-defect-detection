@@ -1,3 +1,19 @@
+![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?logo=pytorch&logoColor=white)
+![Computer Vision](https://img.shields.io/badge/Area-Computer%20Vision-success)
+![License](https://img.shields.io/badge/license-MIT-green.svg)
+
+## 🚀 Result at a Glance
+
+| Metric | Performance / Outcome |
+|--------|----------------------|
+| mAP50 (test) | 0.647 — Baseline YOLOv8m |
+| Inference speed | 118ms per image (CPU) |
+| Dataset scale | 12,568 images → 37,704 tiles |
+| Pipeline | RLE masks → YOLO bboxes, end-to-end |
+| Training | 85 epochs on Kaggle T4 GPU |
+
+---
+
 # Severstal Steel Defect Detection
 
 **Object detection** pipeline for industrial steel surface defects using **YOLOv8m**, trained on the [Severstal Steel Defect Detection](https://www.kaggle.com/competitions/severstal-steel-defect-detection) dataset.
@@ -28,11 +44,11 @@ Since the task is object detection, the pipeline converts RLE masks to bounding 
 4. Stratified train/val/test split (75/15/10)
 5. YOLOv8m training
 
-**Tiling:** Each image is split into 3 overlapping tiles at positions [0, 495, 991] with width 608px (~113px overlap). Overlap ensures defects near tile boundaries appear fully on at least one tile.
-
-**Stratified split:** Images are split by original filename (not tile), using class priority order (rarest class first) to ensure rare classes are proportionally distributed across splits.
+**Tiling:** Each image is split into 3 overlapping tiles with width 608px (~113px overlap). Overlap ensures defects near tile boundaries appear fully on at least one tile.
 
 **Adaptive thresholds:** Minimum blob area per class was derived from median blob area analysis (`eda/analyze_blobs.py`), using lower thresholds for rare classes to avoid discarding valid annotations.
+
+**Stratified split:** Images are split by original filename (not tile), using class priority order (rarest class first) to ensure rare classes are proportionally distributed across splits.
 
 ---
 
@@ -73,7 +89,7 @@ An attempt to reduce the impact of class imbalance:
 The balanced experiment did not improve overall metrics, likely due to fewer training epochs (50 vs 85) and the OOM-forced batch size reduction from 32 to 8, which introduced noisy gradients.
 
 <p align="center">
-  <img src="media/yolo_evaluation/baseline/val_batch0_pred.jpg" width="700"/>
+  <img src="media/yolo_evaluation/baseline/val_batch2_pred.jpg" width="800"/>
   <br><em>Baseline predictions on test set</em>
 </p>
 
