@@ -1,4 +1,5 @@
 ![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?logo=pytorch&logoColor=white)
+![YOLOv8](https://img.shields.io/badge/YOLOv8-Ultralytics-blue)
 ![Computer Vision](https://img.shields.io/badge/Area-Computer%20Vision-success)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 
