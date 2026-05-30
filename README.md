@@ -7,7 +7,7 @@
 
 ---
 
-## 🚀 Result at a Glance
+## 📊 Result at a Glance
 
 | Metric | Performance / Outcome |
 |--------|----------------------|
@@ -134,7 +134,7 @@ The latency difference is expected — HuggingFace free tier uses shared CPU wit
 
 - **Segmentation model:** U-Net with EfficientNet-B0 backbone can use the original RLE masks directly, avoiding the lossy RLE→bbox conversion. Segmentation is better suited for diffuse defects like crazing.
 - **Cascade architecture:** YOLO detects defect regions, a lightweight classifier refines the class prediction — trading latency for recall.
-- **API & Deployment:** REST API with FastAPI, containerized with Docker.
+- **REST API & Docker:** Production-ready FastAPI endpoint containerized with Docker for scalable deployment.
 
 ---
 
