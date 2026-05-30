@@ -3,6 +3,10 @@
 ![Computer Vision](https://img.shields.io/badge/Area-Computer%20Vision-success)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 
+## 🚀 **Live Demo:** [Try the model on HuggingFace Spaces](https://huggingface.co/spaces/ShvetsMaksym/steel-surface-defect-detection-deploy)
+
+---
+
 ## 🚀 Result at a Glance
 
 | Metric | Performance / Outcome |
@@ -106,6 +110,26 @@ The baseline model processes a full 256×1600 image in ~357ms on CPU (3 tiles se
 
 ---
 
+## Deployment
+
+The model is deployed as a Gradio app on [HuggingFace Spaces](https://huggingface.co/spaces/ShvetsMaksym/steel-surface-defect-detection-deploy) (CPU Basic, free tier).
+
+### **Stack** 
+YOLOv8m + Gradio + HuggingFace Spaces
+
+### **Pipeline** 
+full 256×1600 image → 3 overlapping tiles → YOLOv8m inference → cross-tile NMS → result image + JSON output.
+
+### **Inference time**
+| Environment | Time per image |
+|-------------|---------------|
+| Local CPU (AMD Ryzen 5 3600) | ~357ms |
+| HuggingFace Spaces (CPU Basic) | ~50s |
+
+The latency difference is expected — HuggingFace free tier uses shared CPU with minimal resources. Local benchmark reflects real-world edge deployment performance.
+
+---
+
 ## Future Work
 
 - **Segmentation model:** U-Net with EfficientNet-B0 backbone can use the original RLE masks directly, avoiding the lossy RLE→bbox conversion. Segmentation is better suited for diffuse defects like crazing.
@@ -115,4 +139,5 @@ The baseline model processes a full 256×1600 image in ~357ms on CPU (3 tiles se
 ---
 
 > Full source code, preprocessing pipeline, and Kaggle training notebooks are in this repository.  
-> Baseline weights (85 epochs): [Kaggle Models](https://www.kaggle.com/models/shvetsmaksym42/yolo-baseline)
+> Deployment app (Gradio): [HuggingFace Spaces](https://huggingface.co/spaces/ShvetsMaksym/steel-surface-defect-detection-deploy)  
+> Baseline weights (85 epochs): [HuggingFace Models](https://huggingface.co/ShvetsMaksym/yolo_steel_defect_detection/blob/main/best.pt)
