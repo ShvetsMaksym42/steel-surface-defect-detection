@@ -1,4 +1,5 @@
 ![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?logo=pytorch&logoColor=white)
+![YOLOv8](https://img.shields.io/badge/YOLOv8-Ultralytics-blue)
 ![Computer Vision](https://img.shields.io/badge/Area-Computer%20Vision-success)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 
@@ -7,7 +8,7 @@
 | Metric | Performance / Outcome |
 |--------|----------------------|
 | mAP50 (test) | 0.647 — Baseline YOLOv8m |
-| Inference speed | 118ms per image (CPU) |
+| Inference speed | 357ms per image / 119ms per tile |
 | Dataset scale | 12,568 images → 37,704 tiles |
 | Pipeline | RLE masks → YOLO bboxes, end-to-end |
 | Training | 85 epochs on Kaggle T4 GPU |
@@ -98,6 +99,11 @@ The balanced experiment did not improve overall metrics, likely due to fewer tra
   <br><em>Normalized confusion matrix — Baseline (test set)</em>
 </p>
 
+The baseline model processes a full 256×1600 image in ~357ms on CPU (3 tiles sequentially, ~119ms each).
+
+> [!NOTE]
+> Inference benchmarked on CPU (AMD Ryzen 5 3600, 6-core).
+
 ---
 
 ## Future Work
@@ -105,6 +111,7 @@ The balanced experiment did not improve overall metrics, likely due to fewer tra
 - **Segmentation model:** U-Net with EfficientNet-B0 backbone can use the original RLE masks directly, avoiding the lossy RLE→bbox conversion. Segmentation is better suited for diffuse defects like crazing.
 - **Cascade architecture:** YOLO detects defect regions, a lightweight classifier refines the class prediction — trading latency for recall.
 - **API & Deployment:** REST API with FastAPI, containerized with Docker.
+
 ---
 
 > Full source code, preprocessing pipeline, and Kaggle training notebooks are in this repository.  
