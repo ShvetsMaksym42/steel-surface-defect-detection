@@ -1,6 +1,8 @@
+![Python](https://img.shields.io/badge/Python-3.11-blue?logo=python&logoColor=white)
+![Computer Vision](https://img.shields.io/badge/Area-Computer%20Vision-success)
+![HuggingFace](https://img.shields.io/badge/Demo-HuggingFace%20Spaces-yellow?logo=huggingface)
 ![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?logo=pytorch&logoColor=white)
 ![YOLOv8](https://img.shields.io/badge/YOLOv8-Ultralytics-blue)
-![Computer Vision](https://img.shields.io/badge/Area-Computer%20Vision-success)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 
 ## 🚀 **Live Demo:** [Try the model on HuggingFace Spaces](https://huggingface.co/spaces/ShvetsMaksym/steel-surface-defect-detection-deploy)
