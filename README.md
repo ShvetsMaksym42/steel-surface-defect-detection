@@ -23,7 +23,9 @@
 
 # Severstal Steel Defect Detection
 
-**Object detection** pipeline for industrial steel surface defects using **YOLOv8m**, trained on the [Severstal Steel Defect Detection](https://www.kaggle.com/competitions/severstal-steel-defect-detection) dataset.
+**Object detection** pipeline for industrial steel surface defects using **YOLOv8m**.
+
+This is a real industrial problem — but the dataset comes with **RLE segmentation masks**, not **bounding boxes**. **Segmentation models** are more natural here, but heavier. Since **edge deployment** was a priority, I decided to test how far a **YOLO-based detection** approach could go: convert RLE masks to bounding boxes, handle the unusual image dimensions through **tiling**, and train YOLOv8m on the result. The tradeoff is real — bounding boxes are lossy for diffuse defects like **crazing** — but the experiment shows where detection holds up and where segmentation would genuinely help.
 
 ---
 
@@ -31,8 +33,7 @@
 
 The dataset contains:
 - **12,568** grayscale steel surface images (256×1600)
-- **4** defect classes annotated with RLE masks 
-Since the task is object detection, the pipeline converts RLE masks to bounding boxes, slices images into overlapping tiles, and trains YOLOv8m on the resulting dataset.
+- **4** defect classes annotated with RLE masks
 
 **Key challenges:**
 - RLE masks use 1-indexed, column-major order encoding
